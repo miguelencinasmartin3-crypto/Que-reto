@@ -1,0 +1,10 @@
+{
+  "name": "¡Qué Reto!",
+  "short_name": "Qué Reto",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#080b28",
+  "theme_color": "#090b2b",
+  "lang": "es",
+  "description": "Retos divertidos, preguntas y acertijos."
+}

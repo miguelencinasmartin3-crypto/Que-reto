@@ -1,0 +1,14 @@
+¡QUÉ RETO! — prototipo inicial
+
+Contenido:
+- index.html: aplicación web adaptable a móviles.
+- manifest.webmanifest: datos para instalarla como app.
+- sw.js: caché básica para uso offline tras la primera visita.
+
+Para probar:
+1. Descomprime el ZIP.
+2. Sube los tres archivos a un alojamiento HTTPS estático (por ejemplo, GitHub Pages).
+3. Abre la URL en Chrome en Android.
+4. Menú ⋮ > Añadir a pantalla de inicio / Instalar aplicación.
+
+El prototipo guarda los puntos y favoritos en el propio dispositivo. Todavía no tiene cuentas, clasificación entre usuarios ni publicidad.

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b2b">
+<meta name="description" content="¡Qué Reto! Juega, ríe y comparte retos seguros y divertidos.">
+<link rel="manifest" href="manifest.webmanifest">
+<title>¡Qué Reto!</title>
+<style>
+:root{--bg:#080b28;--panel:#141943;--cyan:#20dcff;--pink:#ff35d2;--yellow:#ffd52e;--green:#49f542}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0%,#292080 0,#10143c 38%,var(--bg) 78%);color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;gap:10px}.points{border:1px solid #706cff;background:#16194c;border-radius:30px;padding:9px 14px;font-weight:800;color:var(--yellow)}
+main{max-width:760px;margin:auto;padding:8px 16px 32px}.hero{text-align:center;padding:18px 8px 24px}.mascot{font-size:56px;filter:drop-shadow(0 0 12px #ffca28)}h1{font-size:clamp(42px,10vw,68px);line-height:1;margin:5px 0;color:#ffdf38;text-shadow:3px 4px 0 #e34b00,0 0 22px #ff3bd4;letter-spacing:-2px}.tag{font-weight:800;letter-spacing:2px;color:#8defff}.panel{background:linear-gradient(145deg,#171d55,#101331);border:2px solid #8d45ff;border-radius:22px;padding:18px;box-shadow:0 0 20px #a12cff66;margin:12px 0}.eyebrow{color:#72eaff;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;font-size:13px}.question{font-size:21px;font-weight:800;margin:10px 0 16px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.answer,.secondary{border:1px solid #7c8bff;background:#22295e;color:white;padding:13px;border-radius:14px;font-size:16px;font-weight:750;cursor:pointer}.answer:active,.secondary:active,.play:active{transform:scale(.98)}.answer:disabled{opacity:.8;cursor:default}.play{width:100%;border:0;border-radius:22px;padding:17px;margin:14px 0;background:linear-gradient(#7aff54,#18c929);color:#071b10;font-size:27px;font-weight:1000;box-shadow:0 6px 0 #087c20,0 0 25px #41ff5977;cursor:pointer}.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.tile{border:1px solid #6c69ff;border-radius:18px;padding:18px 10px;text-align:center;background:linear-gradient(145deg,#23256a,#121638);font-weight:800;cursor:pointer;min-height:100px}.tile span{display:block;font-size:30px;margin-bottom:5px}.tile:nth-child(2){border-color:#ff9c37}.tile:nth-child(3){border-color:#24cfff}.tile:nth-child(4){border-color:#65ff4e}.tile:nth-child(5){border-color:#ff3cba}.tile:nth-child(6){border-color:#a05cff}.view{display:none}.view.active{display:block}.back{margin:5px 0 15px}.result{margin-top:14px;padding:12px;border-radius:12px;background:#202958;font-weight:700}.nav{display:flex;justify-content:space-around;gap:4px;margin-top:22px;padding:12px 4px;background:#101638;border-radius:18px}.nav button{background:none;border:0;color:#c7d0ff;font-weight:700;font-size:13px;padding:6px;cursor:pointer}.small{color:#b9c4f4;font-size:13px}.listitem{padding:13px;border-bottom:1px solid #343b70}.hidden{display:none!important}
+@media(min-width:560px){.tiles{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="points">⭐ <span id="points">0</span> puntos</div><div>🏆 <b>¡A jugar!</b></div></header>
+<main>
+<section id="home" class="view active">
+ <div class="hero"><div class="mascot">😎👑</div><h1>¡QUÉ RETO!</h1><div class="tag">JUEGA · RÍE · COMPARTE</div></div>
+ <div class="panel"><div class="eyebrow">⚡ Reto del día</div><div class="question">¿Cuál es el animal terrestre más rápido?</div><div class="answers" id="dailyAnswers"></div><div id="dailyResult" class="result hidden" aria-live="polite"></div></div>
+ <button class="play" onclick="startRandom()">▶ JUGAR</button>
+ <div class="tiles">
+  <button class="tile" onclick="openCategory('quiz')"><span>❓</span>Preguntas</button>
+  <button class="tile" onclick="openCategory('riddle')"><span>🧩</span>Acertijos</button>
+  <button class="tile" onclick="openCategory('observe')"><span>🔎</span>Observa y encuentra</button>
+  <button class="tile" onclick="openCategory('creative')"><span>💡</span>Creatividad</button>
+  <button class="tile" onclick="openCategory('words')"><span>🔤</span>Juegos de palabras</button>
+  <button class="tile" onclick="showRanking()"><span>🏆</span>Tus puntos</button>
+ </div>
+ <nav class="nav"><button onclick="goHome()">🏠<br>Inicio</button><button onclick="showFavorites()">⭐<br>Favoritos</button><button onclick="showRanking()">🏆<br>Ranking</button><button onclick="shareApp()">↗<br>Compartir</button></nav>
+</section>
+<section id="game" class="view">
+ <button class="secondary back" onclick="goHome()">← Inicio</button>
+ <div class="panel"><div class="eyebrow" id="categoryLabel">RETO</div><div class="question" id="gameQuestion"></div><div class="answers" id="gameAnswers"></div><div id="gameResult" class="result hidden" aria-live="polite"></div></div>
+ <button class="play" onclick="nextQuestion()">SIGUIENTE RETO →</button>
+ <button class="secondary" onclick="toggleFavorite()">☆ Guardar en favoritos</button>
+</section>
+<section id="ranking" class="view">
+ <button class="secondary back" onclick="goHome()">← Inicio</button><div class="panel"><h2>🏆 Tus puntos</h2><p class="question"><span id="totalPoints">0</span> puntos conseguidos</p><p class="small">Los puntos se guardan en este dispositivo.</p></div>
+</section>
+<section id="favorites" class="view">
+ <button class="secondary back" onclick="goHome()">← Inicio</button><div class="panel"><h2>⭐ Favoritos</h2><div id="favoriteList" class="small">Todavía no has guardado retos.</div></div>
+</section>
+</main>
+<script>
+const questions=[
+{c:"quiz",label:"PREGUNTA",q:"¿Cuál es el animal terrestre más rápido?",a:["León","Guepardo","Tigre","Caballo"],correct:1,why:"El guepardo es el animal terrestre más rápido."},
+{c:"quiz",label:"VERDADERO O FALSO",q:"Los pulpos tienen tres corazones.",a:["Verdadero","Falso"],correct:0,why:"¡Verdadero! Tienen tres corazones."},
+{c:"riddle",label:"ACERTIJO",q:"Tengo agujas y no sé coser. ¿Qué soy?",a:["Un reloj","Un erizo","Un pino","Una brújula"],correct:0,why:"¡Un reloj! Sus agujas marcan la hora."},
+{c:"riddle",label:"ACERTIJO",q:"Cuanto más quitas, más grande se hace. ¿Qué es?",a:["Un agujero","Una montaña","Una caja","Una nube"],correct:0,why:"Un agujero."},
+{c:"observe",label:"OBSERVA",q:"¿Qué palabra está escrita de forma diferente?",a:["MARIPOSA","MARIPOSA","MARIP0SA","MARIPOSA"],correct:2,why:"La tercera lleva un cero en lugar de la letra O."},
+{c:"creative",label:"CREATIVIDAD",q:"Inventa un nombre para una mascota que sea mitad nube y mitad gato.",a:["Escribe tu idea","Pasa al siguiente"],correct:0,why:"¡No hay respuesta incorrecta! La creatividad suma."},
+{c:"words",label:"JUEGO DE PALABRAS",q:"¿Cuál de estas palabras rima con «ventana»?",a:["Campana","Zapato","Nube","Reloj"],correct:0,why:"Campana rima con ventana."},
+{c:"quiz",label:"CURIOSIDAD",q:"¿Qué planeta es conocido como el planeta rojo?",a:["Venus","Marte","Júpiter","Saturno"],correct:1,why:"Marte, por el aspecto rojizo de su superficie."},
+{c:"words",label:"PALABRAS",q:"Ordena mentalmente las letras: O S A C. ¿Qué palabra puedes formar?",a:["CASO","SACO","Ambas"],correct:2,why:"¡Las dos! CASO y SACO."},
+{c:"creative",label:"IMAGINACIÓN",q:"Tienes 10 segundos: piensa en tres usos divertidos para una cuchara (sin utilizarla de forma peligrosa).",a:["¡Ya los tengo!","Necesito más tiempo"],correct:0,why:"¡Reto superado! Vale cualquier idea original."}
+];
+let points=Number(localStorage.getItem("qr_points")||0), current=0, favorites=JSON.parse(localStorage.getItem("qr_favs")||"[]"), answered=false;
+const $=id=>document.getElementById(id);
+function updatePoints(){$("points").textContent=points;$("totalPoints").textContent=points;localStorage.setItem("qr_points",points)}
+function show(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(id).classList.add("active")}
+function goHome(){show("home")}
+function renderDaily(){const q=questions[0];$("dailyAnswers").innerHTML=q.a.map((a,i)=>`<button class="answer" onclick="dailyAnswer(${i})">${a}</button>`).join("")}
+function dailyAnswer(i){const q=questions[0];if($("dailyResult").classList.contains("hidden")){let ok=i===q.correct;if(ok){points+=10;updatePoints()}$("dailyResult").textContent=(ok?"✅ ¡Correcto! +10 puntos. ":"❌ ¡Casi! ")+q.why;$("dailyResult").classList.remove("hidden");document.querySelectorAll("#dailyAnswers button").forEach(b=>b.disabled=true)}}
+function startRandom(){loadQuestion(Math.floor(Math.random()*questions.length));show("game")}
+function openCategory(c){let indexes=questions.map((q,i)=>q.c===c?i:-1).filter(i=>i>=0);loadQuestion(indexes[Math.floor(Math.random()*indexes.length)]);show("game")}
+function loadQuestion(i){current=i;answered=false;let q=questions[i];$("categoryLabel").textContent=q.label;$("gameQuestion").textContent=q.q;$("gameAnswers").innerHTML=q.a.map((a,n)=>`<button class="answer" onclick="answer(${n})">${a}</button>`).join("");$("gameResult").classList.add("hidden")}
+function answer(i){if(answered)return;answered=true;let q=questions[current],ok=i===q.correct;if(ok||q.c==="creative"){points+=10;updatePoints()}$("gameResult").textContent=(q.c==="creative"?"💡 ¡Creatividad puntuada! +10 puntos. ":ok?"✅ ¡Correcto! +10 puntos. ":"❌ ¡Buen intento! ")+q.why;$("gameResult").classList.remove("hidden");document.querySelectorAll("#gameAnswers button").forEach(b=>b.disabled=true)}
+function nextQuestion(){startRandom()}
+function toggleFavorite(){let q=questions[current],key=q.q;if(!favorites.includes(key))favorites.push(key);else favorites=favorites.filter(x=>x!==key);localStorage.setItem("qr_favs",JSON.stringify(favorites));alert("Guardado en favoritos ⭐")}
+function showFavorites(){show("favorites");$("favoriteList").innerHTML=favorites.length?favorites.map(x=>`<div class="listitem">⭐ ${x}</div>`).join(""):"Todavía no has guardado retos."}
+function showRanking(){show("ranking");updatePoints()}
+function shareApp(){if(navigator.share){navigator.share({title:"¡Qué Reto!",text:"¡Prueba estos retos divertidos conmigo!"}).catch(()=>{})}else{alert("¡Qué Reto! — Juega, ríe y comparte.")}}
+renderDaily();updatePoints();
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script>
+</body></html>
